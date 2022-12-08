@@ -1,0 +1,636 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Sudoku</title>
+	<script src="https://cdn.jsdelivr.net/gh/cappytan91/sudoku.js@latest/sudoku.js"></script>
+	<script data-src="https://cdn.jsdelivr.net/npm/context-filter-polyfill@0.2.4/dist/index.js">         // This one is needed for canvas to work on mobile :(
+		!function () {
+			var t;
+			!function (t2) {
+				t2.None = "none", t2.Url = "url", t2.Blur = "blur", t2.Brightness = "brightness", t2.Contrast = "contrast", t2.DropShadow = "drop-shadow", t2.Grayscale = "grayscale", t2.HueRotate = "hue-rotate", t2.Invert = "invert", t2.Opacity = "opacity", t2.Saturate = "saturate", t2.Sepia = "sepia";
+			}(t || (t = {}));
+			var r = new Map(), a = function (t2) {
+				var r2 = document.createElement("canvas");
+				return r2.height = t2.canvas.height, r2.width = t2.canvas.width, Object.defineProperty(r2, "__skipFilterPatch", { value: true }), r2.getContext("2d");
+			};
+			var e = ["__skipFilterPatch", "__currentPathMirror", "canvas", "filter", "getImageData"];
+			var n = ["clearRect", "drawImage", "fill", "fillRect", "fillText", "stroke", "strokeRect", "strokeText"], i = function (t2, a2) {
+				a2.match(/([-a-z]+)(?:\(([\w\d\s\.%-]*)\))?/gim).map(function (t3) {
+					return t3.match(/([-a-z]+)(?:\((.*)\))?/i).slice(1, 3);
+				}).reduce(function (t3, a3) {
+					var e2 = a3[0], n2 = a3[1];
+					return r.has(e2) ? r.get(e2).apply(void 0, [t3].concat((n2 || "").split(" "))) : t3;
+				}, t2);
+			}, o = function (t2) {
+				var r2 = parseFloat(t2);
+				return /%\s*?$/i.test(t2) && (r2 /= 100), r2;
+			}, s = function (t2) {
+				return parseFloat(t2);
+			};
+			var c, h;
+			r.set(t.None, function (t2) {
+				return t2;
+			}), r.set(t.Blur, function (t2, r2) {
+				r2 === void 0 && (r2 = "0");
+				var a2 = s(r2);
+				if (a2 <= 0)
+					return t2;
+				for (var e2, n2, i2, o2, c2 = t2.canvas, h2 = c2.height, u = c2.width, v = t2.getImageData(0, 0, u, h2), f = v.data, p = u - 1, g = h2 - 1, l = a2 + 1, d = [1, 57, 41, 21, 203, 34, 97, 73, 227, 91, 149, 62, 105, 45, 39, 137, 241, 107, 3, 173, 39, 71, 65, 238, 219, 101, 187, 87, 81, 151, 141, 133, 249, 117, 221, 209, 197, 187, 177, 169, 5, 153, 73, 139, 133, 127, 243, 233, 223, 107, 103, 99, 191, 23, 177, 171, 165, 159, 77, 149, 9, 139, 135, 131, 253, 245, 119, 231, 224, 109, 211, 103, 25, 195, 189, 23, 45, 175, 171, 83, 81, 79, 155, 151, 147, 9, 141, 137, 67, 131, 129, 251, 123, 30, 235, 115, 113, 221, 217, 53, 13, 51, 50, 49, 193, 189, 185, 91, 179, 175, 43, 169, 83, 163, 5, 79, 155, 19, 75, 147, 145, 143, 35, 69, 17, 67, 33, 65, 255, 251, 247, 243, 239, 59, 29, 229, 113, 111, 219, 27, 213, 105, 207, 51, 201, 199, 49, 193, 191, 47, 93, 183, 181, 179, 11, 87, 43, 85, 167, 165, 163, 161, 159, 157, 155, 77, 19, 75, 37, 73, 145, 143, 141, 35, 138, 137, 135, 67, 33, 131, 129, 255, 63, 250, 247, 61, 121, 239, 237, 117, 29, 229, 227, 225, 111, 55, 109, 216, 213, 211, 209, 207, 205, 203, 201, 199, 197, 195, 193, 48, 190, 47, 93, 185, 183, 181, 179, 178, 176, 175, 173, 171, 85, 21, 167, 165, 41, 163, 161, 5, 79, 157, 78, 154, 153, 19, 75, 149, 74, 147, 73, 144, 143, 71, 141, 140, 139, 137, 17, 135, 134, 133, 66, 131, 65, 129, 1][a2], m = [0, 9, 10, 10, 14, 12, 14, 14, 16, 15, 16, 15, 16, 15, 15, 17, 18, 17, 12, 18, 16, 17, 17, 19, 19, 18, 19, 18, 18, 19, 19, 19, 20, 19, 20, 20, 20, 20, 20, 20, 15, 20, 19, 20, 20, 20, 21, 21, 21, 20, 20, 20, 21, 18, 21, 21, 21, 21, 20, 21, 17, 21, 21, 21, 22, 22, 21, 22, 22, 21, 22, 21, 19, 22, 22, 19, 20, 22, 22, 21, 21, 21, 22, 22, 22, 18, 22, 22, 21, 22, 22, 23, 22, 20, 23, 22, 22, 23, 23, 21, 19, 21, 21, 21, 23, 23, 23, 22, 23, 23, 21, 23, 22, 23, 18, 22, 23, 20, 22, 23, 23, 23, 21, 22, 20, 22, 21, 22, 24, 24, 24, 24, 24, 22, 21, 24, 23, 23, 24, 21, 24, 23, 24, 22, 24, 24, 22, 24, 24, 22, 23, 24, 24, 24, 20, 23, 22, 23, 24, 24, 24, 24, 24, 24, 24, 23, 21, 23, 22, 23, 24, 24, 24, 22, 24, 24, 24, 23, 22, 24, 24, 25, 23, 25, 25, 23, 24, 25, 25, 24, 22, 25, 25, 25, 24, 23, 24, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 23, 25, 23, 24, 25, 25, 25, 25, 25, 25, 25, 25, 25, 24, 22, 25, 25, 23, 25, 25, 20, 24, 25, 24, 25, 25, 22, 24, 25, 24, 25, 24, 25, 25, 24, 25, 25, 25, 25, 22, 25, 25, 25, 24, 25, 24, 25, 18][a2], _ = [], w = [], y = [], D = [], P = [], I = [], b = 3; b-- > 0;) {
+					for (var M = 0, O = 0, k = 0; k < h2; k++) {
+						for (var C = f[M] * l, x = f[M + 1] * l, F = f[M + 2] * l, j = f[M + 3] * l, R = 1; R <= a2; R++)
+							e2 = M + ((R > p ? p : R) << 2), C += f[e2++], x += f[e2++], F += f[e2++], j += f[e2];
+						for (var S = 0; S < u; S++)
+							_[O] = C, w[O] = x, y[O] = F, D[O] = j, k === 0 && (P[S] = ((e2 = S + l) < p ? e2 : p) << 2, I[S] = (e2 = S - a2) > 0 ? e2 << 2 : 0), n2 = M + P[S], i2 = M + I[S], C += f[n2++] - f[i2++], x += f[n2++] - f[i2++], F += f[n2++] - f[i2++], j += f[n2] - f[i2], O++;
+						M += u << 2;
+					}
+					for (S = 0; S < u; S++) {
+						var T = S;
+						for (C = _[T] * l, x = w[T] * l, F = y[T] * l, j = D[T] * l, R = 1; R <= a2; R++)
+							C += _[T += R > g ? 0 : u], x += w[T], F += y[T], j += D[T];
+						for (O = S << 2, k = 0; k < h2; k++)
+							f[O + 3] = o2 = j * d >>> m, o2 > 0 ? (o2 = 255 / o2, f[O] = (C * d >>> m) * o2, f[O + 1] = (x * d >>> m) * o2, f[O + 2] = (F * d >>> m) * o2) : f[O] = f[O + 1] = f[O + 2] = 0, S === 0 && (P[k] = ((e2 = k + l) < g ? e2 : g) * u, I[k] = (e2 = k - a2) > 0 ? e2 * u : 0), n2 = S + P[k], i2 = S + I[k], C += _[n2] - _[i2], x += w[n2] - w[i2], F += y[n2] - y[i2], j += D[n2] - D[i2], O += u << 2;
+					}
+				}
+				return t2.putImageData(v, 0, 0), t2;
+			}), r.set(t.Brightness, function (t2, r2) {
+				if (r2 === void 0 && (r2 = "1"), (r2 = o(r2)) === 1)
+					return t2;
+				r2 < 0 && (r2 = 0);
+				for (var a2 = t2.canvas, e2 = a2.height, n2 = a2.width, i2 = t2.getImageData(0, 0, n2, e2), s2 = i2.data, c2 = s2.length, h2 = 0; h2 < c2; h2 += 4)
+					s2[h2 + 0] *= r2, s2[h2 + 1] *= r2, s2[h2 + 2] *= r2;
+				return t2.putImageData(i2, 0, 0), t2;
+			}), r.set(t.Contrast, function (t2, r2) {
+				if (r2 === void 0 && (r2 = "1"), (r2 = o(r2)) === 1)
+					return t2;
+				r2 < 0 && (r2 = 0);
+				for (var a2 = t2.canvas, e2 = a2.height, n2 = a2.width, i2 = t2.getImageData(0, 0, n2, e2), s2 = i2.data, c2 = s2.length, h2 = 0; h2 < c2; h2 += 4)
+					s2[h2 + 0] = 255 * ((s2[h2 + 0] / 255 - 0.5) * r2 + 0.5), s2[h2 + 1] = 255 * ((s2[h2 + 1] / 255 - 0.5) * r2 + 0.5), s2[h2 + 2] = 255 * ((s2[h2 + 2] / 255 - 0.5) * r2 + 0.5);
+				return t2.putImageData(i2, 0, 0), t2;
+			}), r.set(t.DropShadow, function (t2, r2, a2, e2, n2) {
+				var i2 = document.createElement("canvas").getContext("2d");
+
+				// debug
+				i2.canvas.width = t2.canvas.width;
+				i2.canvas.height = t2.canvas.height;
+
+				i2.shadowOffsetX = s(r2), i2.shadowOffsetY = s(a2), i2.shadowBlur = n2 ? s(e2 || "0") : 0, i2.shadowColor = n2 || e2 || "transparent", i2.drawImage(t2.canvas, 0, 0);
+				var o2 = t2.canvas, c2 = o2.width, h2 = o2.height;
+				return t2.putImageData(i2.getImageData(0, 0, c2, h2), 0, 0), t2;
+			}), r.set(t.Grayscale, function (t2, r2) {
+				if (r2 === void 0 && (r2 = "0"), (r2 = o(r2)) <= 0)
+					return t2;
+				r2 > 1 && (r2 = 1);
+				for (var a2 = t2.canvas, e2 = a2.height, n2 = a2.width, i2 = t2.getImageData(0, 0, n2, e2), s2 = i2.data, c2 = s2.length, h2 = 0; h2 < c2; h2 += 4) {
+					var u = 0.2126 * s2[h2] + 0.7152 * s2[h2 + 1] + 0.0722 * s2[h2 + 2];
+					s2[h2 + 0] += (u - s2[h2 + 0]) * r2, s2[h2 + 1] += (u - s2[h2 + 1]) * r2, s2[h2 + 2] += (u - s2[h2 + 2]) * r2;
+				}
+				return t2.putImageData(i2, 0, 0), t2;
+			}), r.set(t.HueRotate, function (t2, r2) {
+				r2 === void 0 && (r2 = "0deg");
+				var a2 = function (t3) {
+					var r3 = parseFloat(t3);
+					switch (t3.slice(r3.toString().length)) {
+						case "deg":
+							r3 /= 360;
+							break;
+						case "grad":
+							r3 /= 400;
+							break;
+						case "rad":
+							r3 /= 2 * Math.PI;
+					}
+					return r3;
+				}(r2);
+				if (a2 <= 0)
+					return t2;
+				var e2, n2, i2, o2, s2, c2, h2, u, v, f = t2.canvas, p = f.height, g = f.width, l = t2.getImageData(0, 0, g, p), d = l.data, m = (a2 % 1 + 1) % 1 * 3, _ = Math.floor(m), w = m - _, y = 1 - w;
+				switch (_) {
+					case 0:
+						e2 = y, n2 = 0, i2 = w, o2 = w, s2 = y, c2 = 0, h2 = 0, u = w, v = y;
+						break;
+					case 1:
+						e2 = 0, n2 = w, i2 = y, o2 = y, s2 = 0, c2 = w, h2 = w, u = y, v = 0;
+						break;
+					case 2:
+						e2 = w, n2 = y, i2 = 0, o2 = 0, s2 = w, c2 = y, h2 = y, u = 0, v = w;
+				}
+				for (var D = 0, P = 0; P < p; ++P)
+					for (var I = 0; I < g; ++I) {
+						var b = d[0 + (D = 4 * (P * g + I))], M = d[D + 1], O = d[D + 2];
+						d[D + 0] = Math.floor(e2 * b + n2 * M + i2 * O), d[D + 1] = Math.floor(o2 * b + s2 * M + c2 * O), d[D + 2] = Math.floor(h2 * b + u * M + v * O);
+					}
+				return t2.putImageData(l, 0, 0), t2;
+			}), r.set(t.Invert, function (t2, r2) {
+				if (r2 === void 0 && (r2 = "0"), (r2 = o(r2)) <= 0)
+					return t2;
+				r2 > 1 && (r2 = 1);
+				for (var a2 = t2.canvas, e2 = a2.height, n2 = a2.width, i2 = t2.getImageData(0, 0, n2, e2), s2 = i2.data, c2 = s2.length, h2 = 0; h2 < c2; h2 += 4)
+					s2[h2 + 0] = Math.abs(s2[h2 + 0] - 255 * r2), s2[h2 + 1] = Math.abs(s2[h2 + 1] - 255 * r2), s2[h2 + 2] = Math.abs(s2[h2 + 2] - 255 * r2);
+				return t2.putImageData(i2, 0, 0), t2;
+			}), r.set(t.Opacity, function (t2, r2) {
+				if (r2 === void 0 && (r2 = "1"), (r2 = o(r2)) < 0)
+					return t2;
+				r2 > 1 && (r2 = 1);
+				for (var a2 = t2.canvas, e2 = a2.height, n2 = a2.width, i2 = t2.getImageData(0, 0, n2, e2), s2 = i2.data, c2 = s2.length, h2 = 3; h2 < c2; h2 += 4)
+					s2[h2] *= r2;
+				return t2.putImageData(i2, 0, 0), t2;
+			}), r.set(t.Saturate, function (t2, r2) {
+				r2 === void 0 && (r2 = "1");
+				var a2 = o(r2);
+				if (a2 === 1)
+					return t2;
+				a2 < 0 && (a2 = 0);
+				for (var e2 = t2.canvas, n2 = e2.height, i2 = e2.width, s2 = t2.getImageData(0, 0, i2, n2), c2 = s2.data, h2 = 0.3086 * (1 - a2), u = 0.6094 * (1 - a2), v = 0.082 * (1 - a2), f = i2 << 2, p = 0; p < n2; p++)
+					for (var g = p * f, l = 0; l < i2; l++) {
+						var d = g + (l << 2), m = c2[d + 0], _ = c2[d + 1], w = c2[d + 2];
+						c2[d + 0] = (h2 + a2) * m + u * _ + v * w, c2[d + 1] = h2 * m + (u + a2) * _ + v * w, c2[d + 2] = h2 * m + u * _ + (v + a2) * w;
+					}
+				return t2.putImageData(s2, 0, 0), t2;
+			}), r.set(t.Sepia, function (t2, r2) {
+				if (r2 === void 0 && (r2 = "0"), (r2 = o(r2)) <= 0)
+					return t2;
+				r2 > 1 && (r2 = 1);
+				for (var a2 = t2.canvas, e2 = a2.height, n2 = a2.width, i2 = t2.getImageData(0, 0, n2, e2), s2 = i2.data, c2 = s2.length, h2 = 0; h2 < c2; h2 += 4) {
+					var u = s2[h2 + 0], v = s2[h2 + 1], f = s2[h2 + 2];
+					s2[h2 + 0] = (0.393 * u + 0.769 * v + 0.189 * f) * r2 + u * (1 - r2), s2[h2 + 1] = (0.349 * u + 0.686 * v + 0.168 * f) * r2 + v * (1 - r2), s2[h2 + 2] = (0.272 * u + 0.534 * v + 0.131 * f) * r2 + f * (1 - r2);
+				}
+				return t2.putImageData(i2, 0, 0), t2;
+			}), "filter" in CanvasRenderingContext2D.prototype || (c = HTMLCanvasElement, h = CanvasRenderingContext2D, Object.defineProperty(c.prototype, "__skipFilterPatch", { writable: true, value: false }), Object.defineProperty(c.prototype, "__currentPathMirror", { writable: true, value: void 0 }), Object.defineProperty(h.prototype, "filter", { writable: true, value: t.None }), function (t2) {
+				Object.keys(t2.prototype).filter(function (t3) {
+					return e.indexOf(t3) < 0;
+				}).map(function (r2) {
+					return { member: r2, descriptor: Object.getOwnPropertyDescriptor(t2.prototype, r2) };
+				}).filter(function (t3) {
+					return t3.descriptor.set;
+				}).forEach(function (r2) {
+					var e2 = r2.member, n2 = r2.descriptor;
+					Object.defineProperty(t2.prototype, e2, {
+						get: function () {
+							return this.canvas.__skipFilterPatch ? n2.get.call(this) : this.canvas.__currentPathMirror[e2];
+						}, set: function (t3) {
+							if (this.canvas.__skipFilterPatch)
+								return n2.set.call(this, t3);
+							this.canvas.__currentPathMirror || (this.canvas.__currentPathMirror = a(this)), this.canvas.__currentPathMirror[e2] = t3;
+						}
+					});
+				});
+			}(CanvasRenderingContext2D), function (t2) {
+				Object.keys(t2.prototype).filter(function (t3) {
+					return e.indexOf(t3) < 0;
+				}).map(function (r2) {
+					return { member: r2, descriptor: Object.getOwnPropertyDescriptor(t2.prototype, r2) };
+				}).filter(function (t3) {
+					var r2 = t3.descriptor;
+					return r2.value && typeof r2.value == "function";
+				}).forEach(function (r2) {
+					var e2 = r2.member, o2 = r2.descriptor.value;
+					Object.defineProperty(t2.prototype, e2, {
+						value: function () {
+							for (var t3, r3 = [], s2 = 0; s2 < arguments.length; s2++)
+								r3[s2] = arguments[s2];
+							if (this.canvas.__skipFilterPatch || e2 === 'clearRect')
+								return o2.call.apply(o2, [this].concat(r3));
+
+							this.canvas.__currentPathMirror || (this.canvas.__currentPathMirror = a(this));
+							var c2 = (t3 = this.canvas.__currentPathMirror)[e2].apply(t3, r3);
+							if (n.indexOf(e2) > -1) {
+								i(this.canvas.__currentPathMirror, this.filter), this.canvas.__skipFilterPatch = true;
+								var h2 = void 0;
+								"getTransform" in this && (h2 = this.getTransform(), this.setTransform(1, 0, 0, 1, 0, 0)), this.drawImage(this.canvas.__currentPathMirror.canvas, 0, 0), h2 && this.setTransform(h2), this.canvas.__skipFilterPatch = false, this.canvas.__currentPathMirror = a(this);
+							}
+							return c2;
+						}
+					});
+				});
+			}(CanvasRenderingContext2D));
+		}();
+	</script>
+	<style>
+		canvas {
+			padding-left: 0;
+			padding-right: 0;
+			margin-left: auto;
+			margin-right: auto;
+			display: block;
+			border: 4px solid black;
+		}
+		
+		button {
+			width: 75px;
+			height: 75px;
+			font-size: 4vw;
+		}
+		
+	</style>
+
+</head>
+
+<body style="background-color: rgb(49, 49, 49)">
+
+	<canvas id="game" width="900" height="900">Please Update Your Browser<br>(it doesn't support html5 canvas)</canvas>
+	
+	<div style="text-align: center">
+		<button onClick="placeNum(1)">1</button>
+		<button onClick="placeNum(2)">2</button>
+		<button onClick="placeNum(3)">3</button>
+		<button onClick="placeNum(4)">4</button>
+		<button onClick="placeNum(5)">5</button>
+		<button onClick="placeNum(6)">6</button>
+		<button onClick="placeNum(7)">7</button>
+		<button onClick="placeNum(8)">8</button>
+		<button onClick="placeNum(9)">9</button>
+		<button onClick="placeNum('Clear')">Clear</button>
+	</div>
+	
+	<script>
+		
+	
+		function placeNum(value){
+			if (value == 1 || value == 49) {
+
+				puzzle[selectedSquare[1]][selectedSquare[0]] = "1";
+				placed[selectedSquare[1]][selectedSquare[0]] = "1";
+				wrong[selectedSquare[1]][selectedSquare[0]] = "1";
+			}
+
+			if (value == 2 || value == 50) {
+
+				puzzle[selectedSquare[1]][selectedSquare[0]] = "2";
+				placed[selectedSquare[1]][selectedSquare[0]] = "2";
+				wrong[selectedSquare[1]][selectedSquare[0]] = "2";
+			}
+
+			if (value == 3 || value == 51) {
+				puzzle[selectedSquare[1]][selectedSquare[0]] = "3";
+				placed[selectedSquare[1]][selectedSquare[0]] = "3";
+				wrong[selectedSquare[1]][selectedSquare[0]] = "3";
+			}
+
+			if (value == 4 || value == 52) {
+
+				puzzle[selectedSquare[1]][selectedSquare[0]] = "4";
+				placed[selectedSquare[1]][selectedSquare[0]] = "4";
+				wrong[selectedSquare[1]][selectedSquare[0]] = "4";
+			}
+
+			if (value == 5 || value == 53) {
+
+				puzzle[selectedSquare[1]][selectedSquare[0]] = "5";
+				placed[selectedSquare[1]][selectedSquare[0]] = "5";
+				wrong[selectedSquare[1]][selectedSquare[0]] = "5";
+			}
+
+			if (value == 6 || value == 54) {
+
+				puzzle[selectedSquare[1]][selectedSquare[0]] = "6";
+				placed[selectedSquare[1]][selectedSquare[0]] = "6";
+				wrong[selectedSquare[1]][selectedSquare[0]] = "6";
+			}
+
+			if (value == 7 || value == 55) {
+
+				puzzle[selectedSquare[1]][selectedSquare[0]] = "7";
+				placed[selectedSquare[1]][selectedSquare[0]] = "7";
+				wrong[selectedSquare[1]][selectedSquare[0]] = "7";
+			}
+
+			if (value == 8 || value == 56) {
+
+				puzzle[selectedSquare[1]][selectedSquare[0]] = "8";
+				placed[selectedSquare[1]][selectedSquare[0]] = "8";
+				wrong[selectedSquare[1]][selectedSquare[0]] = "8";
+			}
+
+			if (value == 9 || value == 57) {
+
+				puzzle[selectedSquare[1]][selectedSquare[0]] = "9";
+				placed[selectedSquare[1]][selectedSquare[0]] = "9";
+				wrong[selectedSquare[1]][selectedSquare[0]] = "9";
+			}
+
+			if (value == "Clear") {
+				puzzle[selectedSquare[1]][selectedSquare[0]] = ".";
+				placed[selectedSquare[1]][selectedSquare[0]] = ".";
+				wrong[selectedSquare[1]][selectedSquare[0]] = ".";
+			}
+			
+			if (sudoku.solve(sudoku.board_grid_to_string(puzzle)) == false) {
+				puzzle[selectedSquare[1]][selectedSquare[0]] = ".";
+				placed[selectedSquare[1]][selectedSquare[0]] = ".";
+			} else {
+				wrong[selectedSquare[1]][selectedSquare[0]] = ".";
+			}
+			
+			printPuzzle();
+			ctx.strokeStyle = "teal";
+			ctx.lineWidth = 4;
+			ctx.strokeRect(selectedSquare[0] * (canvas.width / 9) + 2, selectedSquare[1] * (canvas.height / 9) + 2, 96, 96);
+			
+			if(sudoku.board_grid_to_string(puzzle) == sudoku.solve(sudoku.board_grid_to_string(puzzle))){
+				setTimeout(function(){alert("Solved");}, 100)	
+			}
+			
+		}
+	
+	
+	</script>
+
+
+	<script>
+		const sudoku = window.sudoku;
+		var canvas = document.getElementById("game");
+		var ctx = canvas.getContext("2d");
+
+		var originalPuzzle = sudoku.generate("inhuman");                    	// this junk is needed because javascript sucks 
+		var puzzle = [...originalPuzzle];								    //
+		originalPuzzle = sudoku.board_string_to_grid(originalPuzzle);		//
+		puzzle = sudoku.board_string_to_grid(puzzle);						//
+
+		var placed = sudoku.board_string_to_grid(
+			[".", ".", ".", ".", ".", ".", ".", ".", ".",
+				".", ".", ".", ".", ".", ".", ".", ".", ".",
+				".", ".", ".", ".", ".", ".", ".", ".", ".",
+				".", ".", ".", ".", ".", ".", ".", ".", ".",
+				".", ".", ".", ".", ".", ".", ".", ".", ".",
+				".", ".", ".", ".", ".", ".", ".", ".", ".",
+				".", ".", ".", ".", ".", ".", ".", ".", ".",
+				".", ".", ".", ".", ".", ".", ".", ".", ".",
+				".", ".", ".", ".", ".", ".", ".", ".", ".",]);
+
+		var wrong = sudoku.board_string_to_grid(
+			[".", ".", ".", ".", ".", ".", ".", ".", ".",
+				".", ".", ".", ".", ".", ".", ".", ".", ".",
+				".", ".", ".", ".", ".", ".", ".", ".", ".",
+				".", ".", ".", ".", ".", ".", ".", ".", ".",
+				".", ".", ".", ".", ".", ".", ".", ".", ".",
+				".", ".", ".", ".", ".", ".", ".", ".", ".",
+				".", ".", ".", ".", ".", ".", ".", ".", ".",
+				".", ".", ".", ".", ".", ".", ".", ".", ".",
+				".", ".", ".", ".", ".", ".", ".", ".", ".",]);
+
+		var selectedSquare;
+
+		var img = new Image(); img.src = "img/square.png";   // cell image
+
+		var one = new Image(); one.src = "img/1.png";   // numbers
+		var two = new Image(); two.src = "img/2.png";
+		var three = new Image(); three.src = "img/3.png";
+		var four = new Image(); four.src = "img/4.png";
+		var five = new Image(); five.src = "img/5.png";
+		var six = new Image(); six.src = "img/6.png";
+		var seven = new Image(); seven.src = "img/7.png";
+		var eight = new Image(); eight.src = "img/8.png";
+		var nine = new Image(); nine.src = "img/9.png";
+
+
+		//this sets up the canvas to look like an actual board
+		
+		window.addEventListener('load', function () {
+  			printPuzzle();
+		});
+
+
+		function drawSelect(e) {
+
+			
+			
+			if (e.target == canvas) {							// this is used to detect if the canvas is clicked, then it will run this stuff
+				
+				printPuzzle();
+				
+				var pos = getMousePos(canvas, e);
+				posx = pos.x;
+				posy = pos.y;
+
+				var gridX = Math.trunc(posx / 100);
+				var gridY = Math.trunc(posy / 100);
+
+				if (originalPuzzle[gridY][gridX] == ".") {
+					ctx.strokeStyle = "teal";
+					ctx.lineWidth = 4;
+					ctx.strokeRect(gridX * (canvas.width / 9) + 2, gridY * (canvas.height / 9) + 2, 96, 96);
+					selectedSquare = [gridX, gridY];
+
+				}else{
+					selectedSquare = [-100, -100];
+				}
+				
+			}
+			
+			
+
+		}
+
+		window.addEventListener('click', drawSelect, false);
+		window.addEventListener('touchstart', drawSelect, false);
+
+		function getMousePos(canvas, evt) {
+			var rect = canvas.getBoundingClientRect();
+			
+			if(evt.type == 'touchstart' || evt.type == 'touchmove' || evt.type == 'touchend' || evt.type == 'touchcancel'){
+    			var e = (typeof evt.originalEvent === 'undefined') ? evt : evt.originalEvent;
+   				var touch = e.touches[0] || e.changedTouches[0];
+    			x = touch.pageX;
+    			y = touch.pageY;
+
+				return {
+					x: (touch.pageX - rect.left) / (rect.right - rect.left) * canvas.width,
+					y: (touch.pageY - rect.top) / (rect.bottom - rect.top) * canvas.height
+				};
+
+			}else {
+				return {
+					x: (evt.clientX - rect.left) / (rect.right - rect.left) * canvas.width,
+					y: (evt.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height
+				};
+			}
+			
+		}
+
+
+		function printPuzzle() {
+
+			ctx.clearRect(0, 0, canvas.width, canvas.height);   // Clears the canvas to print
+
+			ctx.fillStyle = "white";
+			ctx.fillRect(0, 0, 900, 900);
+
+			ctx.fillStyle = "lightgrey";            // Creates lighgrey squares in the background
+			ctx.fillRect(0, 0, 300, 300);			//
+			//
+			ctx.fillStyle = "lightgrey";			//
+			ctx.fillRect(600, 0, 300, 300);			//
+			//
+			ctx.fillStyle = "lightgrey";			//
+			ctx.fillRect(300, 300, 300, 300);		//
+			//
+			ctx.fillStyle = "lightgrey";			//
+			ctx.fillRect(0, 600, 300, 300);			//
+			//
+			ctx.fillStyle = "lightgrey";			//
+			ctx.fillRect(600, 600, 300, 300);		//
+
+
+
+			for (let i = 0; i < 9; i++) {           // Draws grid
+				for (let j = 0; j < 9; j++) {
+					ctx.drawImage(img, j * canvas.width / 9, i * canvas.width / 9);
+				}
+			}
+
+
+
+			// Horizontal Lines
+
+			ctx.fillStyle = "black";
+			ctx.fillRect(0, 296, 900, 8);
+
+			ctx.fillStyle = "black";
+			ctx.fillRect(0, 596, 900, 8);
+
+
+
+			// Vertical Lines
+
+			ctx.fillStyle = "black";
+			ctx.fillRect(296, 0, 8, 900);
+
+			ctx.fillStyle = "black";
+			ctx.fillRect(596, 0, 8, 900);
+
+
+
+
+			for (let i = 0; i < 9; i++) {				// this prints the puzzle (numbers)
+				for (let j = 0; j < 9; j++) {
+					
+					
+					if (wrong[i][j] == 1)
+						ctx.drawImage(one, j * canvas.width / 9, i * canvas.width / 9);		//this prints the numbers that were wrong (red)
+
+					if (wrong[i][j] == 2)
+						ctx.drawImage(two, j * canvas.width / 9, i * canvas.width / 9);
+
+					if (wrong[i][j] == 3)
+						ctx.drawImage(three, j * canvas.width / 9, i * canvas.width / 9);
+
+					if (wrong[i][j] == 4)
+						ctx.drawImage(four, j * canvas.width / 9, i * canvas.width / 9);
+
+					if (wrong[i][j] == 5)
+						ctx.drawImage(five, j * canvas.width / 9, i * canvas.width / 9);
+
+					if (wrong[i][j] == 6)
+						ctx.drawImage(six, j * canvas.width / 9, i * canvas.width / 9);
+
+					if (wrong[i][j] == 7)
+						ctx.drawImage(seven, j * canvas.width / 9, i * canvas.width / 9);
+
+					if (wrong[i][j] == 8)
+						ctx.drawImage(eight, j * canvas.width / 9, i * canvas.width / 9);
+
+					if (wrong[i][j] == 9)
+						ctx.drawImage(nine, j * canvas.width / 9, i * canvas.width / 9);
+					
+					ctx.filter = 'none';
+					
+
+					ctx.filter = 'brightness(0) invert(40%)';
+
+					if (placed[i][j] == 1)
+						ctx.drawImage(one, j * canvas.width / 9, i * canvas.width / 9);		//this prints the numbers that were already placed (lightgrey)
+
+					if (placed[i][j] == 2)
+						ctx.drawImage(two, j * canvas.width / 9, i * canvas.width / 9);
+
+					if (placed[i][j] == 3)
+						ctx.drawImage(three, j * canvas.width / 9, i * canvas.width / 9);
+
+					if (placed[i][j] == 4)
+						ctx.drawImage(four, j * canvas.width / 9, i * canvas.width / 9);
+
+					if (placed[i][j] == 5)
+						ctx.drawImage(five, j * canvas.width / 9, i * canvas.width / 9);
+
+					if (placed[i][j] == 6)
+						ctx.drawImage(six, j * canvas.width / 9, i * canvas.width / 9);
+
+					if (placed[i][j] == 7)
+						ctx.drawImage(seven, j * canvas.width / 9, i * canvas.width / 9);
+
+					if (placed[i][j] == 8)
+						ctx.drawImage(eight, j * canvas.width / 9, i * canvas.width / 9);
+
+					if (placed[i][j] == 9)
+						ctx.drawImage(nine, j * canvas.width / 9, i * canvas.width / 9);
+
+					ctx.filter = 'none';
+					
+					
+					
+					ctx.filter = 'brightness(0)';
+
+					if (originalPuzzle[i][j] == 1)
+						ctx.drawImage(one, j * canvas.width / 9, i * canvas.width / 9);		//this prints the numbers that 
+
+					if (originalPuzzle[i][j] == 2)
+						ctx.drawImage(two, j * canvas.width / 9, i * canvas.width / 9);
+
+					if (originalPuzzle[i][j] == 3)
+						ctx.drawImage(three, j * canvas.width / 9, i * canvas.width / 9);
+
+					if (originalPuzzle[i][j] == 4)
+						ctx.drawImage(four, j * canvas.width / 9, i * canvas.width / 9);
+
+					if (originalPuzzle[i][j] == 5)
+						ctx.drawImage(five, j * canvas.width / 9, i * canvas.width / 9);
+
+					if (originalPuzzle[i][j] == 6)
+						ctx.drawImage(six, j * canvas.width / 9, i * canvas.width / 9);
+
+					if (originalPuzzle[i][j] == 7)
+						ctx.drawImage(seven, j * canvas.width / 9, i * canvas.width / 9);
+
+					if (originalPuzzle[i][j] == 8)
+						ctx.drawImage(eight, j * canvas.width / 9, i * canvas.width / 9);
+
+					if (originalPuzzle[i][j] == 9)
+						ctx.drawImage(nine, j * canvas.width / 9, i * canvas.width / 9);
+					
+					ctx.filter = 'none';
+					
+
+				}
+			}
+
+			
+
+
+		}
+
+		document.addEventListener("keydown", function (event) {
+			
+			if(event.keyCode == 8){
+				placeNum("Clear");
+			}else{
+				placeNum(event.keyCode);
+			}
+			
+			
+
+
+		});
+
+
+
+
+
+
+
+	</script>
+
+</body>
+
+</html>

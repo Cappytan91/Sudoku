@@ -1,0 +1,322 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Sudoku</title>
+<script src="https://cdn.jsdelivr.net/gh/cappytan91/sudoku.js@latest/sudoku.js"></script>
+<style>
+	
+canvas {
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+	border: 4px solid black;
+}	
+	
+	
+</style>
+	
+	
+	
+</head>
+
+<body style="background-color: rgb(49, 49, 49)">
+	
+	<canvas id="game" width="900" height="900">Please Update Your Browser<br>(it doesn't support html5 canvas)</canvas>
+	
+	
+	<script>
+		const sudoku = window.sudoku;
+		var canvas = document.getElementById("game");
+		var ctx = canvas.getContext("2d");
+
+		var originalPuzzle = sudoku.generate(60);                           // this junk is needed because javascript sucks 
+		var puzzle = [...originalPuzzle];								    //
+		originalPuzzle = sudoku.board_string_to_grid(originalPuzzle);		//
+		puzzle = sudoku.board_string_to_grid(puzzle);						//
+		var placed = sudoku.board_string_to_grid(
+			[".", ".", ".", ".", ".", ".", ".", ".", ".", 
+			".", ".", ".", ".", ".", ".", ".", ".", ".", 
+			".", ".", ".", ".", ".", ".", ".", ".", ".", 
+			".", ".", ".", ".", ".", ".", ".", ".", ".", 
+			".", ".", ".", ".", ".", ".", ".", ".", ".", 
+			".", ".", ".", ".", ".", ".", ".", ".", ".", 
+			".", ".", ".", ".", ".", ".", ".", ".", ".", 
+			".", ".", ".", ".", ".", ".", ".", ".", ".", 
+			".", ".", ".", ".", ".", ".", ".", ".", ".", ]);
+		
+		var selectedSquare;
+
+		var img = new Image(); img.src = "img/square.png";   // cell image
+		
+		var one = new Image(); one.src = "img/1.png";   // numbers
+		var two = new Image(); two.src = "img/2.png";
+		var three = new Image(); three.src = "img/3.png";
+		var four = new Image(); four.src = "img/4.png";
+		var five = new Image(); five.src = "img/5.png";
+		var six = new Image(); six.src = "img/6.png";
+		var seven = new Image(); seven.src = "img/7.png";
+		var eight = new Image(); eight.src = "img/8.png";
+		var nine = new Image(); nine.src = "img/9.png";
+
+
+		//this sets up the canvas to look like an actual board
+		
+		nine.onload = function () {
+				printPuzzle();
+
+			}
+
+
+			function drawSelect(e) {
+
+				printPuzzle();
+
+				var pos = getMousePos(canvas, e);
+				posx = pos.x;
+				posy = pos.y;
+
+				var gridX = Math.trunc(posx / 100);
+				var gridY = Math.trunc(posy / 100);
+
+
+				if(originalPuzzle[gridY][gridX] == "."){
+					ctx.strokeStyle = "teal";
+					ctx.lineWidth = 4;
+					ctx.strokeRect(gridX * (canvas.width / 9) + 2, gridY * (canvas.height / 9) + 2, 96, 96);
+					selectedSquare = [gridX, gridY];
+				}else{
+					selectedSquare = [-1, -1];
+				}
+				
+
+			}
+
+			window.addEventListener('mousedown', drawSelect, false);
+
+			function getMousePos(canvas, evt) {
+				var rect = canvas.getBoundingClientRect();
+				return {
+					x: (evt.clientX - rect.left) / (rect.right - rect.left) * canvas.width,
+					y: (evt.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height
+				};
+			}
+
+
+			function printPuzzle() {
+
+				ctx.clearRect(0, 0, canvas.width, canvas.height);   // Clears the canvas to print
+
+				ctx.fillStyle = "white";            // Creates lighgrey squares in the background
+				ctx.fillRect(0, 0, 900, 900);
+
+				ctx.fillStyle = "lightgrey";            // Creates lighgrey squares in the background
+				ctx.fillRect(0, 0, 300, 300);			//
+														//
+				ctx.fillStyle = "lightgrey";			//
+				ctx.fillRect(600, 0, 300, 300);			//
+														//
+				ctx.fillStyle = "lightgrey";			//
+				ctx.fillRect(300, 300, 300, 300);		//
+														//
+				ctx.fillStyle = "lightgrey";			//
+				ctx.fillRect(0, 600, 300, 300);			//
+														//
+				ctx.fillStyle = "lightgrey";			//
+				ctx.fillRect(600, 600, 300, 300);		//
+
+
+
+				for (let i = 0; i < 9; i++) {           // Draws grid
+					for (let j = 0; j < 9; j++) {
+						ctx.drawImage(img, j * canvas.width / 9, i * canvas.width / 9);
+					}
+				}
+
+
+
+				// Horizontal Lines
+
+				ctx.fillStyle = "black";
+				ctx.fillRect(0, 296, 900, 8);
+
+				ctx.fillStyle = "black";
+				ctx.fillRect(0, 596, 900, 8);
+
+
+
+				// Vertical Lines
+
+				ctx.fillStyle = "black";
+				ctx.fillRect(296, 0, 8, 900);
+
+				ctx.fillStyle = "black";
+				ctx.fillRect(596, 0, 8, 900);
+
+
+				for (let i = 0; i < 9; i++) {				// this prints the puzzle (numbers)
+					for (let j = 0; j < 9; j++) {
+
+						ctx.filter = 'invert(40%)';
+
+						if (placed[i][j] == 1)
+							ctx.drawImage(one, j * canvas.width / 9, i * canvas.width / 9);
+
+						if (placed[i][j] == 2)
+							ctx.drawImage(two, j * canvas.width / 9, i * canvas.width / 9);
+
+						if (placed[i][j] == 3)
+							ctx.drawImage(three, j * canvas.width / 9, i * canvas.width / 9);
+
+						if (placed[i][j] == 4)
+							ctx.drawImage(four, j * canvas.width / 9, i * canvas.width / 9);
+
+						if (placed[i][j] == 5)
+							ctx.drawImage(five, j * canvas.width / 9, i * canvas.width / 9);
+
+						if (placed[i][j] == 6)
+							ctx.drawImage(six, j * canvas.width / 9, i * canvas.width / 9);
+
+						if (placed[i][j] == 7)
+							ctx.drawImage(seven, j * canvas.width / 9, i * canvas.width / 9);
+
+						if (placed[i][j] == 8)
+							ctx.drawImage(eight, j * canvas.width / 9, i * canvas.width / 9);
+
+						if (placed[i][j] == 9)
+							ctx.drawImage(nine, j * canvas.width / 9, i * canvas.width / 9);
+
+
+					}
+				}
+
+				
+
+				for (let i = 0; i < 9; i++) {				// this prints the puzzle (numbers)
+					for (let j = 0; j < 9; j++) {
+
+						ctx.filter = 'none';
+
+						if (originalPuzzle[i][j] == 1)
+							ctx.drawImage(one, j * canvas.width / 9, i * canvas.width / 9);
+
+						if (originalPuzzle[i][j] == 2)
+							ctx.drawImage(two, j * canvas.width / 9, i * canvas.width / 9);
+
+						if (originalPuzzle[i][j] == 3)
+							ctx.drawImage(three, j * canvas.width / 9, i * canvas.width / 9);
+
+						if (originalPuzzle[i][j] == 4)
+							ctx.drawImage(four, j * canvas.width / 9, i * canvas.width / 9);
+
+						if (originalPuzzle[i][j] == 5)
+							ctx.drawImage(five, j * canvas.width / 9, i * canvas.width / 9);
+
+						if (originalPuzzle[i][j] == 6)
+							ctx.drawImage(six, j * canvas.width / 9, i * canvas.width / 9);
+
+						if (originalPuzzle[i][j] == 7)
+							ctx.drawImage(seven, j * canvas.width / 9, i * canvas.width / 9);
+
+						if (originalPuzzle[i][j] == 8)
+							ctx.drawImage(eight, j * canvas.width / 9, i * canvas.width / 9);
+
+						if (originalPuzzle[i][j] == 9)
+							ctx.drawImage(nine, j * canvas.width / 9, i * canvas.width / 9);
+
+
+					}
+				}
+			}
+
+			document.addEventListener("keypress", function(event) {
+  				if (event.keyCode == 49) {
+					
+    				puzzle[selectedSquare[1]][selectedSquare[0]] = "1";
+					placed[selectedSquare[1]][selectedSquare[0]] = "1";
+					printPuzzle();
+  				}
+
+				if (event.keyCode == 50) {
+					
+    				puzzle[selectedSquare[1]][selectedSquare[0]] = "2";
+					placed[selectedSquare[1]][selectedSquare[0]] = "2";
+					printPuzzle();
+  				}
+
+				if (event.keyCode == 51) {
+					
+    				puzzle[selectedSquare[1]][selectedSquare[0]] = "3";
+					placed[selectedSquare[1]][selectedSquare[0]] = "3";
+					printPuzzle();
+  				}
+
+				if (event.keyCode == 52) {
+					
+    				puzzle[selectedSquare[1]][selectedSquare[0]] = "4";
+					placed[selectedSquare[1]][selectedSquare[0]] = "4";
+					printPuzzle();
+  				}
+
+				if (event.keyCode == 53) {
+
+    				puzzle[selectedSquare[1]][selectedSquare[0]] = "5";
+					placed[selectedSquare[1]][selectedSquare[0]] = "5";
+					printPuzzle();
+  				}
+
+				if (event.keyCode == 54) {
+					
+    				puzzle[selectedSquare[1]][selectedSquare[0]] = "6";
+					placed[selectedSquare[1]][selectedSquare[0]] = "6";
+					printPuzzle();
+  				}
+
+				if (event.keyCode == 55) {
+					
+    				puzzle[selectedSquare[1]][selectedSquare[0]] = "7";
+					placed[selectedSquare[1]][selectedSquare[0]] = "7";
+					printPuzzle();
+  				}
+
+				if (event.keyCode == 56) {
+					
+    				puzzle[selectedSquare[1]][selectedSquare[0]] = "8";
+					placed[selectedSquare[1]][selectedSquare[0]] = "8";
+					printPuzzle();
+  				}
+
+				if (event.keyCode == 57) {
+					
+    				puzzle[selectedSquare[1]][selectedSquare[0]] = "9";
+					placed[selectedSquare[1]][selectedSquare[0]] = "9";
+					printPuzzle();
+  				}
+				
+				  var key = event.keyCode || event.charCode;
+				if (key == 8) {
+					alert("jia")
+    				puzzle[selectedSquare[1]][selectedSquare[0]] = ".";
+					printPuzzle();
+  				}
+
+				ctx.strokeStyle = "teal";
+				ctx.lineWidth = 4;
+				ctx.strokeRect(selectedSquare[0] * (canvas.width / 9) + 2, selectedSquare[1] * (canvas.height / 9) + 2, 96, 96);
+
+			});
+
+		//setTimeout(() => { }, 1000);
+		
+		
+		
+		
+	
+	
+	
+	</script>
+	
+</body>
+</html>
