@@ -343,7 +343,7 @@
 		var canvas = document.getElementById("game");
 		var ctx = canvas.getContext("2d");
 
-		var originalPuzzle = sudoku.generate("inhuman");                    	// this junk is needed because javascript sucks 
+		var originalPuzzle = sudoku.generate("hard");                    	// this junk is needed because javascript sucks 
 		var puzzle = [...originalPuzzle];								    //
 		originalPuzzle = sudoku.board_string_to_grid(originalPuzzle);		//
 		puzzle = sudoku.board_string_to_grid(puzzle);						//
